@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff0f5">
+  <title>Eine kleine Einladung für Melissa 💌</title>
+  <style>
+    :root { --pink:#d64d85; --deep:#9d315f; --soft:#fff0f5; --ink:#593342; }
+    * { box-sizing:border-box }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:22px; color:var(--ink); background:radial-gradient(ellipse at top,#fff 0,#fff5f8 44%,#fce2ed 100%); font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif }
+    .card { width:min(100%,570px); min-height:440px; padding:clamp(28px,7vw,56px); border:1px solid #f6d1df; border-radius:30px; background:#ffffffed; box-shadow:0 22px 70px #a83b6819; text-align:center; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden }
+    .card:before,.card:after { content:"♥"; position:absolute; color:#f5c4d7; opacity:.65; font-size:22px }
+    .card:before { top:22px; left:25px; transform:rotate(-15deg) }.card:after { right:27px; bottom:20px; transform:rotate(16deg) }
+    .eyebrow { color:#b96b89; text-transform:uppercase; letter-spacing:.16em; font-size:.74rem; font-weight:700 }
+    h1 { margin:10px 0 12px; color:var(--pink); font-family:"Brush Script MT","Segoe Script",cursive; font-size:clamp(2.5rem,9vw,4rem); font-weight:600; line-height:1.1 }
+    p { font-size:1.1rem; line-height:1.65; margin:8px auto; max-width:420px }
+    .big-emoji { font-size:4.7rem; line-height:1.2; margin:3px 0 12px }
+    .small { font-size:.94rem; color:#946879 }
+    .actions { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:14px; margin-top:24px; min-height:50px }
+    button,.button-link { border:0; border-radius:999px; padding:13px 26px; font:700 1rem inherit; font-family:inherit; font-size:1rem; cursor:pointer; transition:transform .16s,box-shadow .16s,background .16s; text-decoration:none; display:inline-flex; align-items:center; justify-content:center }
+    button:hover,.button-link:hover { transform:translateY(-2px); box-shadow:0 8px 20px #a83b6826 }
+    .screen { transition:opacity .28s ease,transform .28s ease }
+    .screen.leaving { opacity:0; transform:translateX(-28px) }
+    .screen.entering { opacity:0; transform:translateX(28px) }
+    .primary { background:var(--pink); color:white; box-shadow:0 5px 14px #d64d8538 }
+    .secondary { color:var(--deep); background:#fae3ed }
+    .choice-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:22px auto 4px; width:min(100%,390px) }
+    .choice { background:#fff7fa; color:var(--deep); border:1px solid #f1cada; min-height:76px; display:flex; flex-direction:column; gap:4px }
+    .choice span { font-size:1.55rem }
+    .choice[aria-pressed="true"] { background:#ffe3ee; border:2px solid var(--pink); box-shadow:0 5px 16px #d64d8520 }
+    .form-row { display:flex; flex-direction:column; gap:7px; text-align:left; width:min(100%,350px); margin:15px auto }
+    label { font-weight:700; color:#885269; font-size:.94rem }
+    input { width:100%; min-height:50px; border:1px solid #eac2d2; border-radius:13px; padding:13px 14px; font:inherit; color:var(--ink); background:#fffafd; cursor:pointer; appearance:auto; -webkit-appearance:auto }
+    input:focus { outline:3px solid #f8d3e1 }
+    .error { min-height:1.35em; color:#a63355; font-size:.9rem }
+    .hidden { display:none!important }
+    #noBtn { position:relative; transition:left .22s ease,top .22s ease,transform .16s,box-shadow .16s }
+    @media(max-width:430px) { .card{min-height:410px} .choice-grid{gap:9px} button,.button-link{padding:12px 22px} }
+  </style>
+</head>
+<body>
+  <main class="card" aria-live="polite">
+    <section id="invite" class="screen">
+      <h1>Hi Melissa 💌</h1>
+      <p>Das ist meine Date-Einladung.</p>
+      <div class="actions">
+        <button class="primary" id="yesBtn">Ja</button>
+        <button class="secondary" id="noBtn" aria-label="Nein">Nein</button>
+      </div>
+    </section>
+
+    <section id="surprise" class="screen hidden">
+      <div class="big-emoji">🥳</div>
+      <h1 style="font-family:inherit;font-size:clamp(1.8rem,7vw,2.5rem);font-weight:800">Damn, hätte ich wirklich nicht gedacht.</h1>
+      <p class="small">Dachte safe, du sagst Nein.</p>
+      <div class="actions"><button class="primary" data-next="schedule">OK</button></div>
+    </section>
+
+    <section id="schedule" class="screen hidden">
+      <div class="eyebrow">Schritt 1 von 2</div>
+      <h1 style="font-family:inherit;font-size:clamp(1.8rem,7vw,2.5rem);font-weight:800">Easy. Jetzt geht’s um die Zeit.</h1>
+      <p>Wann hast du am besten Zeit?</p>
+      <div class="form-row"><label for="dateInput">Such dir einen Tag aus</label><input id="dateInput" type="date"></div>
+      <div class="form-row"><label for="timeInput">Und eine Uhrzeit</label><input id="timeInput" type="time"></div>
+      <div class="error" id="dateError" role="status"></div>
+      <div class="actions"><button class="primary" id="toFood">Weiter →</button></div>
+    </section>
+
+    <section id="food" class="screen hidden">
+      <div class="eyebrow">Schritt 2 von 2</div>
+      <h1 style="font-family:inherit;font-size:clamp(1.8rem,7vw,2.5rem);font-weight:800">Worauf hast du Bock? 😋</h1>
+      <p>Was wollen wir essen?</p>
+      <div class="choice-grid" role="group" aria-label="Essen auswählen">
+        <button class="choice" data-food="Pizza" aria-pressed="false"><span>🍕</span>Pizza</button>
+        <button class="choice" data-food="Döner" aria-pressed="false"><span>🥙</span>Döner</button>
+        <button class="choice" data-food="Sushi" aria-pressed="false"><span>🍣</span>Sushi</button>
+        <button class="choice" data-food="Pasta" aria-pressed="false"><span>🍝</span>Pasta</button>
+      </div>
+      <div class="error" id="foodError" role="status"></div>
+      <div class="actions"><button class="primary" id="finishBtn">Weiter →</button></div>
+    </section>
+
+    <section id="done" class="screen hidden">
+      <h1 style="font-family:inherit;font-size:clamp(1.8rem,7vw,2.5rem);font-weight:800">OK Easy!</h1>
+      <p>Das Date steht fest: <strong id="summaryDate"></strong> um <strong id="summaryTime"></strong>.</p>
+      <p>Schreib mir auf Insta, damit ich dir den Treffpunkt sagen kann und alles Weitere.</p>
+      <div class="actions"><a class="button-link primary" id="instaLink" href="https://www.instagram.com/efexcira/" target="_blank" rel="noopener" aria-label="Instagram-Profil öffnen">Instagram</a></div>
+    </section>
+  </main>
+  <script>
+    // Personalize this with your Instagram username, without the @.
+    const INSTAGRAM_USERNAME = "efexcira";
+    const screens = [...document.querySelectorAll('.screen')];
+    let transitioning = false;
+    function show(id) {
+      if (transitioning) return;
+      const current = screens.find(s => !s.classList.contains('hidden'));
+      const next = document.getElementById(id);
+      if (!current || current === next) return;
+      transitioning = true;
+      current.classList.add('leaving');
+      window.setTimeout(() => {
+        current.classList.add('hidden');
+        current.classList.remove('leaving');
+        next.classList.remove('hidden');
+        next.classList.add('entering');
+        requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove('entering')));
+        window.setTimeout(() => { transitioning = false; }, 300);
+      }, 280);
+    }
+    document.getElementById('yesBtn').addEventListener('click', () => show('surprise'));
+    document.querySelector('[data-next="schedule"]').addEventListener('click', () => show('schedule'));
+    const noBtn = document.getElementById('noBtn');
+    function scoot(event) {
+      const box = noBtn.getBoundingClientRect();
+      const pad = 18;
+      const maxX = Math.max(pad, window.innerWidth - box.width - pad);
+      const maxY = Math.max(pad, window.innerHeight - box.height - pad);
+      let x, y, tries = 0;
+      do {
+        x = pad + Math.random() * (maxX - pad);
+        y = pad + Math.random() * (maxY - pad);
+        tries++;
+      } while (tries < 12 && Math.hypot(x + box.width/2 - (event.clientX || box.left), y + box.height/2 - (event.clientY || box.top)) < 150);
+      noBtn.style.position = 'fixed'; noBtn.style.left = x + 'px'; noBtn.style.top = y + 'px'; noBtn.style.zIndex = '5';
+    }
+    noBtn.addEventListener('pointerenter', scoot);
+    noBtn.addEventListener('pointerdown', event => { event.preventDefault(); scoot(event); });
+    noBtn.addEventListener('focus', scoot);
+    const dateInput = document.getElementById('dateInput');
+    const localToday = new Date();
+    dateInput.min = new Date(localToday.getTime() - localToday.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    // Open the browser's native date picker when the field is clicked where supported.
+    dateInput.addEventListener('click', () => { if (typeof dateInput.showPicker === 'function') { try { dateInput.showPicker(); } catch (_) {} } });
+    document.getElementById('toFood').addEventListener('click', () => {
+      const dateError = document.getElementById('dateError');
+      if (!dateInput.value || !document.getElementById('timeInput').value) { dateError.textContent = 'Bitte wähle einen Tag und eine Uhrzeit aus.'; return; }
+      dateError.textContent = ''; show('food');
+    });
+    let selectedFood = '';
+    document.querySelectorAll('[data-food]').forEach(button => button.addEventListener('click', () => {
+      selectedFood = button.dataset.food;
+      document.querySelectorAll('[data-food]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+      document.getElementById('foodError').textContent = '';
+    }));
+    document.getElementById('finishBtn').addEventListener('click', () => {
+      if (!selectedFood) { document.getElementById('foodError').textContent = 'Such dir noch etwas Leckeres aus 😊'; return; }
+      const [year, month, day] = dateInput.value.split('-').map(Number);
+      document.getElementById('summaryDate').textContent = new Intl.DateTimeFormat('de-DE', { day:'numeric', month:'long', year:'numeric' }).format(new Date(year, month-1, day));
+      document.getElementById('summaryTime').textContent = document.getElementById('timeInput').value;
+      const insta = document.getElementById('instaLink');
+      insta.href = 'https://www.instagram.com/' + INSTAGRAM_USERNAME + '/';
+      show('done');
+    });
+  </script>
+</body>
+</html>
